@@ -15,7 +15,10 @@
  cat id_rsa.pub
 (copiar clave publica y guardarla en settings de github)
 eval "$(ssh-agent)"
-ssh-add id_rsa
+ssh-add ~./id_rsa
+```
+Probar conexión
+```
 ssh -T git@github.com
 git clone git@github.com:pet-finder-seminario/pet-finder.git
 git remote set-url origin git@github.com:pet-finder-seminario/pet-finder.git
