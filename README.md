@@ -13,7 +13,9 @@
 <enter>
 <enter>
  cat id_rsa.pub
+ ```
 (copiar clave publica y guardarla en settings de github)
+```
 eval "$(ssh-agent)"
 ssh-add ~./id_rsa
 ```
