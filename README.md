@@ -29,11 +29,11 @@ git push -u origin algun-branch
 ### Backend
 
 - [ ] **Descargar e instalar lo siguiente**
-* python
-* pip
-* google cloud sdk
-* git
-* Algún IDE o Text Editor (Pycharm, Sublime, etc)
+* python 2.7 o superior https://www.python.org/download/releases/2.7/
+* pip --version o descargar https://www.liquidweb.com/kb/install-pip-windows/
+* google cloud sdk https://dl.google.com/dl/cloudsdk/channels/rapid/GoogleCloudSDKInstaller.exe
+* git CLI https://git-scm.com/download/win o UI https://www.sourcetreeapp.com/
+* Algún IDE o Text Editor (Pycharm, Sublime, etc) https://www.jetbrains.com/pycharm/download/#section=windows
 
 
 - [ ] **Instalar dependencias**
@@ -43,8 +43,10 @@ pip install virtualenv
 virtualenv venv
 (navegar hasta /backend/ y probar localmente)
 python main.py
-http://127.0.0.1:5000/
 ```
+probar localmente http://127.0.0.1:5000/
+Versionar localmente 
+(commits atómicos y mantener branchs sin conflictos con master)
 **Y hacer pull request desde github**
 
 - [ ] **desde CMD**
