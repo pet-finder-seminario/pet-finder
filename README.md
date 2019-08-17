@@ -1,68 +1,68 @@
 # Seminario de analista 🤓
 
-
 ## Instalación
 
+### Pre-requisitos
 
-- [ ] **Configurar git**
+- [Python 3.7](https://www.python.org/downloads/) 🐍
+- pip (administrador de paquetes)
+- [Google Cloud SDK](https://cloud.google.com/sdk/)
+- git
+- [Node.js v10+](https://nodejs.org/en/download/)
+- Algún IDE o Text Editor (Pycharm, Sublime, VSCode, etc)
 
-```cd ~/.ssh
+### Clonar repositorio
 
- ssh-keygen -t rsa -C 'email@gmail.com'
-<enter>
-<enter>
-<enter>
- cat id_rsa.pub
-(copiar clave publica y guardarla en settings de github)
-eval "$(ssh-agent)"
-ssh-add id_rsa
-ssh -T git@github.com
-git clone git@github.com:pet-finder-seminario/pet-finder.git
-git remote set-url origin git@github.com:pet-finder-seminario/pet-finder.git
-git checkout algun-branch
-git commit -m "algun comentario"
-git push -u origin algun-branch
-```
-   **Y hacer pull request desde github**
-   
-
-### Backend
-
-- [ ] **Descargar e instalar lo siguiente**
-* python
-* pip
-* google cloud sdk
-* git
-* Algún IDE o Text Editor (Pycharm, Sublime, etc)
-
-
-- [ ] **Instalar dependencias**
-```
-pip install flask
-pip install virtualenv
-virtualenv venv
-(navegar hasta /backend/ y probar localmente)
-python main.py
-http://127.0.0.1:5000/
-```
-**Y hacer pull request desde github**
-
-- [ ] **desde CMD**
-```
-(navegar hasta /backend/venv/script/activate)
-ejecutar activate
-(activate) aparece en el CLI
-(navegar hasta /backend)
-
-pip install -t lib -r requirements.txt
+```bash
+$ git clone git@github.com:pet-finder-seminario/pet-finder.git
 ```
 
+### Back end
 
+#### Opción 1 (con Docker)
 
-- [ ] **Deploy a Cloud**
+- Pre-requisito extra: tener instalado Docker localmente
+- Docker levantará la base de datos, instalará las dependencias y arrancará la app automáticamente
 
- >   gcloud app deploy
+```bash
+$ cd back-end
+$ docker-compose up
+```
 
-loguearse y elegir proyecto
+#### Opción 2 (Manual)
 
- >   gcloud app browse
+- Pre-requisito extra: tener instalado PostgreSQL previamente. Para conectarse a la base de datos en development usa este connection string (verificar que así lo tengamos configurado): `postgresql://testusr:password@127.0.0.1:5432/testdb`
+- Debemos crear el directorio de virtualenv fuera de `back-end` para que Google Cloud no lo suba
+- [Leer mas sobre Virtual Envs](https://docs.python-guide.org/dev/virtualenvs/)
+
+```bash
+# Mac/Linux
+$ python3 -m venv venv
+$ source venv/bin/activate
+$ cd back-end
+$ pip install -r requirements.txt
+$ python manage.py recreate_db
+$ python manage.py runserver
+
+# Windows
+> pip install virtualenv
+> virtualenv venv
+> venv\Scripts\activate # (activate) aparece en el CLI
+> cd back-end
+> pip install -t lib -r requirements.txt
+> python manage.py recreate_db
+> python manage.py runserver
+```
+
+### Front end
+
+```bash
+$ cd front-end
+$ npm i && npm start
+```
+
+### Desplegar a Google Cloud
+
+```bash
+$ gcloud app deploy
+```
