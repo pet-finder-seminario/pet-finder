@@ -26,6 +26,7 @@ $ git clone git@github.com:pet-finder-seminario/pet-finder.git
 
 ```bash
 $ cd back-end
+$ docker ps
 $ docker-compose up
 ```
 
