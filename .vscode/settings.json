@@ -1,0 +1,11 @@
+{
+    "window.zoomLevel": 0,
+    "python.venvFolders": [
+      "venv"
+    ],
+    "eslint.alwaysShowStatus": true,
+    "eslint.nodePath":  "./front-end/node_modules",
+    "eslint.workingDirectories": ["./front-end"],
+    "eslint.autoFixOnSave": true
+  }
+  
