@@ -62,6 +62,11 @@ $ cd front-end
 $ npm i && npm start
 ```
 
+*Crear env file*
+```bash
+$ cp .env.example .env
+```
+
 ### Desplegar a Google Cloud
 
 ```bash

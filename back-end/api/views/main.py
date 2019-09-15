@@ -1,10 +1,9 @@
 from flask import Blueprint, request, render_template
-from api.models import db, Person, Email
+from api.models import db, Flyer, Reply
 from api.core import create_response, serialize_list, logger
 from sqlalchemy import inspect
 
 main = Blueprint("main", __name__)  # initialize blueprint
-
 
 # function that is called when you visit /
 @main.route("/")
@@ -16,43 +15,33 @@ def index():
     return render_template("home.html")
 
 
-# function that is called when you visit /persons
-@main.route("/persons", methods=["GET"])
-def get_persons():
-    persons = Person.query.all()
-    return create_response(data={"persons": serialize_list(persons)})
+# function that is called when you visit /flyers
+@main.route("/flyers", methods=["GET"])
+def get_flyers():
+    flyers = Flyer.query.all()
+    return create_response(data={"flyers": serialize_list(flyers)})
 
-@main.route("/home")
-def home():
-    return render_template("home.html")
-    
-@main.route("/about")
-def about():
-    return render_template("about.html")
-
-# POST request for /persons
-@main.route("/persons", methods=["POST"])
-def create_person():
+# POST request for /flyers
+@main.route("/flyers", methods=["POST"])
+def create_flyer():
     data = request.get_json()
 
     logger.info("Data recieved: %s", data)
-    if "name" not in data:
-        msg = "No name provided for person."
+    if "pet_type" not in data:
+        msg = "No pet_type provided for flyer."
         logger.info(msg)
         return create_response(status=422, message=msg)
-    if "email" not in data:
-        msg = "No email provided for person."
+    if "flyer_type" not in data:
+        msg = "No flyer_type provided for flyer."
         logger.info(msg)
         return create_response(status=422, message=msg)
 
-    # create SQLAlchemy Objects
-    new_person = Person(name=data["name"])
-    email = Email(email=data["email"])
-    new_person.emails.append(email)
+    # create SQLAlchemy Object
+    new_flyer = Flyer(name=data["name"])
 
     # commit it to database
-    db.session.add_all([new_person, email])
+    db.session.add_all([new_flyer])
     db.session.commit()
     return create_response(
-        message=f"Successfully created person {new_person.name} with id: {new_person._id}"
+        message=f"Successfully created flyer {new_flyer.name} with id: {new_flyer._id}"
     )
