@@ -16,6 +16,7 @@ import Profile from '../profile';
 
 import TopBar from './components/TopBar';
 import { HomeWrapper } from './components/styled';
+import makePrivate from '../common/hoc/makePrivate';
 
 const tabsIndex = ['map', 'lost', 'found', 'profile'];
 
@@ -55,4 +56,4 @@ Home.propTypes = {
   history: object,
 };
 
-export default Home;
+export default makePrivate(Home);

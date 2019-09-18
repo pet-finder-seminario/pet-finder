@@ -7,5 +7,5 @@ handlers:
   - url: /.*
     script: auto
 
-env_variables:
-  FLASK_ENV: prod
+includes:
+  - env_variables.yaml

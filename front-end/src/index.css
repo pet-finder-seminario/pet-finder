@@ -17,5 +17,13 @@ code {
 html,
 body,
 .App {
-  height: 100vh;
+  height: 100%;
+}
+
+.page-header {
+  @supports (-webkit-appearance:none) {
+    .os-android & {
+      min-height: calc(100vh - 56px);
+    }
+  }
 }
