@@ -25,7 +25,8 @@
         "react/forbid-prop-types": "off",
         "react/require-default-props": "off",
         "import/prefer-default-export": "off",
-        "arrow-parens": "off"
+        "arrow-parens": "off",
+        "react/static-property-placement": "off"
     },
     "parser": "babel-eslint"
 }

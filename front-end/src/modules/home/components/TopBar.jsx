@@ -7,6 +7,7 @@ import IconButton from '@material-ui/core/IconButton';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
+import Firebase from '../../../firebase/firebase';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -30,6 +31,12 @@ export default function MenuAppBar() {
 
   function handleClose() {
     setAnchorEl(null);
+  }
+
+  function onLogout() {
+    localStorage.removeItem('ACCESS_TOKEN');
+    Firebase.auth.signOut();
+    handleClose();
   }
 
   return (
@@ -66,7 +73,7 @@ export default function MenuAppBar() {
                 onClose={handleClose}
               >
                 <MenuItem onClick={handleClose}>Mi Perfil</MenuItem>
-                <MenuItem onClick={handleClose}>Cerrar sesión</MenuItem>
+                <MenuItem onClick={onLogout}>Cerrar sesión</MenuItem>
               </Menu>
             </div>
           )}
