@@ -4,6 +4,8 @@
     "eslint.nodePath":  "./front-end/node_modules",
     "eslint.workingDirectories": ["./front-end"],
     "eslint.autoFixOnSave": true,
-    "python.pythonPath": "./venv/bin/python3"
+    "python.pythonPath": "../venv/bin/python3",
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true
   }
   

@@ -1,0 +1,8 @@
+{
+  "window.zoomLevel": 0,
+  "eslint.alwaysShowStatus": true,
+  "eslint.nodePath": "./node_modules",
+  "eslint.workingDirectories": ["."],
+  "eslint.autoFixOnSave": true,
+  "editor.formatOnSave": false
+}

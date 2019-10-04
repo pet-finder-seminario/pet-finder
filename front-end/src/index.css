@@ -20,10 +20,6 @@ body,
   height: 100%;
 }
 
-.page-header {
-  @supports (-webkit-appearance:none) {
-    .os-android & {
-      min-height: calc(100vh - 56px);
-    }
-  }
+.userActionsCustomLabel {
+  width: 180px;
 }
