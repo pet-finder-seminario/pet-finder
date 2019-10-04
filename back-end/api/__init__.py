@@ -78,10 +78,12 @@ def create_app(test_config=None):
     Migrate(app, db)
 
     # import and register blueprints
-    from api.views import main
+    from api.views import status, search_flyers, adoption_flyers
 
     # why blueprints http://flask.pocoo.org/docs/1.0/blueprints/
-    app.register_blueprint(main.main)
+    app.register_blueprint(status.blueprint, url_prefix='/api/v1')
+    app.register_blueprint(search_flyers.blueprint, url_prefix='/api/v1')
+    app.register_blueprint(adoption_flyers.blueprint, url_prefix='/api/v1')
 
     # register error Handler
     app.register_error_handler(Exception, all_exception_handler)
