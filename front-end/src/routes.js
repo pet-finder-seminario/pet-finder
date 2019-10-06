@@ -3,4 +3,5 @@ export default {
   login: '/login',
   tabs: '/home/:tab',
   map: '/home/map',
+  newFlyer: '/new-flyer',
 };
