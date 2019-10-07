@@ -20,11 +20,11 @@ class Flyer(Mixin, db.Model):
     expiration_date = db.Column(db.DateTime, nullable=True,  default=datetime.datetime.utcnow)
     pet_name = db.Column(db.String, nullable=True)
     pet_type = db.Column(IntEnum(PetTypes), default=PetTypes.dog)
-    photoURL = db.Column(db.String, nullable=False)
+    photo_url = db.Column(db.String, nullable=False)
     description = db.Column(db.String, nullable=True)
     breed = db.Column(db.String, nullable=True)
     replies = db.relationship("Message", backref="flyer", lazy=True)
-    active = db.Column(db.Boolean, default=False)
+    active = db.Column(db.Boolean, default=True)
 
     def __repr__(self):
         return f"<Flyer {self.name if self.name else self.id}>"
