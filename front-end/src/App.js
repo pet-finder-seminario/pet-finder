@@ -17,7 +17,7 @@ function App() {
           <Route exact path={routes.tabs} component={Home} />
           <Route exact path={routes.login} component={Login} />
           <Route exact path={routes.auth} component={Auth} />
-          <Route exact path={routes.newFlyer} component={() => <FlyerItem mode="new" />} />
+          <Route exact path={routes.newFlyer} component={(props) => <FlyerItem mode="new" {...props} />} />
         </div>
       </AuthProvider>
     </BrowserRouter>
