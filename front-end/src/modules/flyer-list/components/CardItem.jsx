@@ -16,13 +16,16 @@ const useStyles = makeStyles({
   card: {
     width: '100%',
   },
+  cardContainer: {
+    marginTop: 16,
+  },
 });
 
 export default function CardItem({ title, description, photoUrl }) {
   const classes = useStyles();
 
   return (
-    <div style={{ margin: 16 }}>
+    <div className={classes.cardContainer}>
       <Card className={classes.card}>
         <CardActionArea>
           <CardMedia
@@ -43,10 +46,10 @@ export default function CardItem({ title, description, photoUrl }) {
         </CardActionArea>
         <CardActions>
           <Button size="small" color="primary">
-            Share
+            Compartir
           </Button>
           <Button size="small" color="primary">
-            Learn More
+            Ver mas info
           </Button>
         </CardActions>
       </Card>

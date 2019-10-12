@@ -36,6 +36,7 @@ export class AppProvider extends React.PureComponent {
         ...mapKeys(values, (_, key) => snakeCase(key)),
       });
 
+      this.fetchMapFlyers();
       this.getSearchFlyers();
       this.showSuccessSnackbar('¡Actualizado con éxito!');
     }
@@ -54,6 +55,15 @@ export class AppProvider extends React.PureComponent {
       }
     }
 
+    fetchMapFlyers = async (bounds = {}) => {
+      const { data: { result: { flyers }, success } } = await apiClient.get('/map_flyers', { params: { ...bounds } });
+      if (success) {
+        this.setState({
+          map: flyers.map(e => mapKeys(e, (_, key) => camelCase(key))),
+        });
+      }
+    }
+
     render() {
       const { children } = this.props;
       const { snackbarMessage } = this.state;
@@ -62,9 +72,8 @@ export class AppProvider extends React.PureComponent {
         ...this.state,
         postSearchFlyer: this.postSearchFlyer,
         getSearchFlyers: this.getSearchFlyers,
+        fetchMapFlyers: this.fetchMapFlyers,
       };
-
-      console.log(this.state);
 
       return (
         <Provider value={contextValue}>

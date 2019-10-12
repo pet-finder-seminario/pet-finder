@@ -6,4 +6,23 @@ export const FlyerListWrapper = styled.div`
   width: 100vw;
   display: inline-block;
   overflow: auto;
+
+  .subtitle {
+      margin-top: 8px;
+  }
+
+  .title, .subtitle {
+      color: #565656;
+  }
+
+  .container {
+    padding: 16px;
+  }
+
+  .fab {
+    position: absolute;
+    bottom: 80px;
+    right: 20px;
+  }
+
 `;
