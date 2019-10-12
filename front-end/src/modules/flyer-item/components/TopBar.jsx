@@ -8,6 +8,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import Button from '@material-ui/core/Button';
 
 import { propTypes } from '../propTypes';
 
@@ -23,12 +24,12 @@ const useStyles = makeStyles(() => ({
 
 const title = {
   new: {
-    lost: 'Mascota perdida',
-    found: 'Mascota encontrada',
+    lost: '',
+    found: '',
   },
 };
 
-export default function MenuAppBar({ mode }) {
+export default function MenuAppBar({ mode, onActionClick }) {
   const classes = useStyles();
   const location = useLocation();
   const query = qs.parse(location.search);
@@ -51,6 +52,9 @@ export default function MenuAppBar({ mode }) {
           <Typography variant="h6" className={classes.title}>
             {title[mode][query.type]}
           </Typography>
+          <Button onClick={onActionClick} color="inherit">
+            Publicar
+          </Button>
         </Toolbar>
       </AppBar>
     </div>

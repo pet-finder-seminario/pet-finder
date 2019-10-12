@@ -40,4 +40,10 @@ class AuthProvider extends React.PureComponent {
   }
 }
 
+export const withAuthContext = mapContextToProps => Comp => props => (
+  <Consumer>
+    {value => <Comp {...mapContextToProps(value)} {...props} />}
+  </Consumer>
+);
+
 export { AuthProvider, Consumer as AuthConsumer };
