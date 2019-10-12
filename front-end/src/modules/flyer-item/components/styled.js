@@ -3,7 +3,11 @@ import styled from 'styled-components';
 export const FlyerItemWrapper = styled.div`
     padding: 16px;
 
-    h1 {
+    .subtitle {
+        margin-top: 8px;
+    }
+
+    .title, .subtitle {
         color: #565656;
     }
 

@@ -1,23 +1,24 @@
 import React from 'react';
 import qs from 'query-string';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import snakeCase from 'lodash/snakeCase';
-import mapKeys from 'lodash/mapKeys';
-import axios from 'axios';
-
 import TextField from '@material-ui/core/TextField';
+import compose from 'lodash/fp/compose';
 
 import TopBar from './components/TopBar';
 
-import { getTitle } from './constants';
+import { getTitle, getSubtitle, FLYER_TYPE } from './constants';
 import { propTypes } from './propTypes';
 import { FlyerItemWrapper } from './components/styled';
+import { withContext } from '../common/context';
+import { withAuthContext } from '../auth/authContext';
 
 const schema = Yup.object().shape({
   petName: Yup.string()
     .max(50, 'El máximo es 50 caracteres'),
+  breed: Yup.string().required('Este campo es requerido'),
+  description: Yup.string().required('Este campo es requerido'),
 });
 
 const initialData = {
@@ -28,43 +29,48 @@ const initialData = {
   flyerType: 1,
   latitude: Math.random() - 31,
   longitude: Math.random() - 63.5,
-  createdBy: 'agustin.aliaga@fakeaddress.com',
+  createdBy: '',
   photoURL: 'https://cdn.pixabay.com/photo/2016/02/19/15/46/dog-1210559__340.jpg',
 };
 
-const FlyerItem = (props) => {
+const FlyerItem = props => {
   const { mode } = props;
   const location = useLocation();
   const query = qs.parse(location.search);
-  const title = getTitle(mode, query.type);
+  const formRef = React.createRef();
 
-  const onSubmit = async values => {
-    await axios.post('http://localhost:5000/api/v1/search_flyers', {
-      ...mapKeys(values, (value, key) => snakeCase(key)),
-    });
+  const title = getTitle(mode, query.type);
+  const subtitle = getSubtitle(mode, query.type);
+  const history = useHistory();
+
+  const onSubmit = async (val) => {
+    const values = {
+      ...val,
+      createdBy: props.user.email,
+      flyerType: FLYER_TYPE[query.type],
+    };
+    await props.postSearchFlyer(values);
+    history.goBack();
   };
 
   return (
-    <>
-      <TopBar {...props} />
-      <Formik
-        initialValues={initialData}
-        validationSchema={schema}
-        onSubmit={onSubmit}
-      >
-        {({
-          values,
-          errors,
-          handleChange,
-          handleSubmit,
-          touched,
-          isSubmitting,
-          handleBlur,
-          /* and other goodies */
-        }) => (
+    <Formik
+      initialValues={initialData}
+      validationSchema={schema}
+      onSubmit={onSubmit}
+    >
+      {({
+        values,
+        errors,
+        handleChange,
+        handleSubmit,
+      }) => (
+        <>
+          <TopBar onActionClick={() => formRef.current.dispatchEvent(new Event('submit'))} {...props} />
           <FlyerItemWrapper>
-            <form className="form" onSubmit={handleSubmit}>
-              <h2>{title}</h2>
+            <form ref={formRef} className="form" onSubmit={handleSubmit}>
+              <h2 className="title">{title}</h2>
+              <h4 className="subtitle">{subtitle}</h4>
               <TextField
                 name="petName"
                 label="Nombre de la mascota"
@@ -104,16 +110,17 @@ const FlyerItem = (props) => {
                 multiline
                 rows={5}
               />
-
-              <button style={{ width: 300 }} type="submit">Submit</button>
             </form>
           </FlyerItemWrapper>
-        )}
-      </Formik>
-    </>
+        </>
+      )}
+    </Formik>
   );
 };
 
 FlyerItem.propTypes = propTypes;
 
-export default FlyerItem;
+export default compose(
+  withContext(({ postSearchFlyer }) => ({ postSearchFlyer })),
+  withAuthContext(({ user }) => ({ user })),
+)(FlyerItem);
