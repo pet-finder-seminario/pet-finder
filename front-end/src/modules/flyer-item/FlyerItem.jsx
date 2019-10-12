@@ -5,6 +5,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import TextField from '@material-ui/core/TextField';
 import compose from 'lodash/fp/compose';
+import { geolocated } from 'react-geolocated';
 
 import TopBar from './components/TopBar';
 
@@ -27,14 +28,14 @@ const initialData = {
   petName: '',
   petType: 1,
   flyerType: 1,
-  latitude: Math.random() - 31,
-  longitude: Math.random() - 63.5,
+  latitude: 0,
+  longitude: 0,
   createdBy: '',
   photoURL: 'https://cdn.pixabay.com/photo/2016/02/19/15/46/dog-1210559__340.jpg',
 };
 
 const FlyerItem = props => {
-  const { mode } = props;
+  const { mode, coords } = props;
   const location = useLocation();
   const query = qs.parse(location.search);
   const formRef = React.createRef();
@@ -47,6 +48,8 @@ const FlyerItem = props => {
     const values = {
       ...val,
       createdBy: props.user.email,
+      latitude: coords.latitude,
+      longitude: coords.longitude,
       flyerType: FLYER_TYPE[query.type],
     };
     await props.postSearchFlyer(values);
@@ -123,4 +126,10 @@ FlyerItem.propTypes = propTypes;
 export default compose(
   withContext(({ postSearchFlyer }) => ({ postSearchFlyer })),
   withAuthContext(({ user }) => ({ user })),
+  geolocated({
+    positionOptions: {
+      enableHighAccuracy: false,
+    },
+    userDecisionTimeout: 5000,
+  }),
 )(FlyerItem);
