@@ -17,7 +17,6 @@ def get_flyers_in_map():
     flyers = []
 
     if params and params['top']:
-        print('in')
         top, bottom, left, right = itemgetter('top', 'bottom', 'left', 'right')(params)
         flyers = SearchFlyer.query.filter(
             SearchFlyer.latitude <= top,
@@ -26,7 +25,6 @@ def get_flyers_in_map():
             SearchFlyer.longitude >= left,
         )
     else:
-        print('out')
         flyers = SearchFlyer.query.all()
 
     return create_response(data={"flyers": serialize_list(flyers)})
