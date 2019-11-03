@@ -9,6 +9,7 @@ export const FlyerItemWrapper = styled.div`
 
     .title, .subtitle {
         color: #565656;
+        text-align: center;
     }
 
     .text-field {
@@ -18,5 +19,6 @@ export const FlyerItemWrapper = styled.div`
     .form {
         display: flex;
         flex-direction: column;
+        align-items: center;
     }
 `;

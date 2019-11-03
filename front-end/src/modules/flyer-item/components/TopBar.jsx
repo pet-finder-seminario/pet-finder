@@ -1,4 +1,6 @@
 import React from 'react';
+import { bool } from 'prop-types';
+
 import { useLocation } from 'react-router-dom';
 import qs from 'query-string';
 
@@ -29,7 +31,7 @@ const title = {
   },
 };
 
-export default function MenuAppBar({ mode, onActionClick }) {
+export default function MenuAppBar({ mode, onActionClick, actionDisabled }) {
   const classes = useStyles();
   const location = useLocation();
   const query = qs.parse(location.search);
@@ -49,10 +51,13 @@ export default function MenuAppBar({ mode, onActionClick }) {
               <ArrowBackIcon />
             </IconButton>
           </div>
-          <Typography variant="h6" className={classes.title}>
+          <Typography
+            variant="h6"
+            className={classes.title}
+          >
             {title[mode][query.type]}
           </Typography>
-          <Button onClick={onActionClick} color="inherit">
+          <Button disabled={actionDisabled} onClick={onActionClick} color="inherit">
             Publicar
           </Button>
         </Toolbar>
@@ -61,4 +66,7 @@ export default function MenuAppBar({ mode, onActionClick }) {
   );
 }
 
-MenuAppBar.propTypes = propTypes;
+MenuAppBar.propTypes = {
+  ...propTypes,
+  actionDisabled: bool,
+};

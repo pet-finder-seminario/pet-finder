@@ -12,3 +12,5 @@ test.db
 creds.ini
 /pgadmin-volume
 /env_variables.yaml
+/google_credentials
+.envrc

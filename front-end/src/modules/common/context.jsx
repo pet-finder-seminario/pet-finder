@@ -41,6 +41,16 @@ export class AppProvider extends React.PureComponent {
       this.showSuccessSnackbar('¡Actualizado con éxito!');
     }
 
+    uploadImage = async data => {
+      const { data: { result } } = await apiClient.post('/upload_image', data, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      return result.photo_url;
+    }
+
     showSuccessSnackbar = (snackbarMessage) => {
       this.setState({ snackbarMessage });
     }
@@ -73,6 +83,7 @@ export class AppProvider extends React.PureComponent {
         postSearchFlyer: this.postSearchFlyer,
         getSearchFlyers: this.getSearchFlyers,
         fetchMapFlyers: this.fetchMapFlyers,
+        uploadImage: this.uploadImage,
       };
 
       return (
