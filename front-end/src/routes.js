@@ -4,4 +4,6 @@ export default {
   tabs: '/home/:tab',
   map: '/home/map',
   newFlyer: '/new-flyer',
+  viewFlyer: '/flyer',
+  messages: '/messages',
 };
