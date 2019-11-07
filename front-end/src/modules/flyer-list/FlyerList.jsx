@@ -20,13 +20,7 @@ const FlyerList = ({ type, lost, found }) => {
       <div className="container">
         <h2 className="title">{title}</h2>
         <h4 className="subtitle">{subtitle}</h4>
-        {content.map(
-          ({
-            petName,
-            description,
-            photoUrl,
-          }) => <CardItem title={petName} description={description} photoUrl={photoUrl} />,
-        )}
+        {content.map(pet => <CardItem pet={pet} />)}
       </div>
       <Fab onClick={() => history.push(`/new-flyer?type=${type}`)} color="primary" aria-label="add" className="fab">
         <AddIcon />

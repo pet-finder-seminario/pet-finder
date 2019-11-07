@@ -5,8 +5,10 @@ import devConfig from './config';
 
 const auth = firebase.auth();
 const googleProvider = new firebase.auth.GoogleAuthProvider();
+const messaging = firebase.messaging();
 
 export default {
   auth,
   googleProvider,
+  messaging,
 };

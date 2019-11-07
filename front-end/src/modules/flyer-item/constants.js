@@ -4,7 +4,7 @@ export const getTitle = (mode, type) => {
     case 'edit':
       return type === 'lost' ? '😢 ¿Se te perdió tu mascota?' : '🐕 ¿Encontraste una mascota de otra persona en la calle?';
     case 'view':
-      return type === 'lost' ? '¡Se perdió! ¿Lo viste en algún lado?' : 'Se busca dueño de mascota perdida';
+      return type === 'lost' ? '¡Se perdió!' : '¡Buscamos a su dueño!';
     default:
       return '';
   }
@@ -16,7 +16,7 @@ export const getSubtitle = (mode, type) => {
     case 'edit':
       return 'Cargá los datos para que otras personas vean el aviso.';
     case 'view':
-      return type === 'lost' ? '¡Se perdió! ¿Lo viste en algún lado?' : 'Se busca dueño de mascota perdida';
+      return type === 'lost' ? '¿Lo viste en algún lado?' : 'Ayudanos a encontrarlo';
     default:
       return '';
   }

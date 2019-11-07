@@ -2,8 +2,6 @@ from flask import Blueprint, request
 from api.models import db, SearchFlyer, AdoptionFlyer, Message
 from api.core import create_response, serialize_list, logger
 from sqlalchemy import inspect
-from google.cloud import storage
-import os
 
 blueprint = Blueprint("search_flyers", __name__)
 
@@ -24,8 +22,8 @@ def get_flyer(flyer_id):
 @blueprint.route("/search_flyers", methods=["POST"])
 def create_flyer():
     data = request.get_json()
-
     logger.info("Data recieved: %s", data)
+
     if "pet_type" not in data:
         msg = "No pet_type provided for flyer."
         logger.info(msg)
@@ -46,32 +44,36 @@ def create_flyer():
         data={ "flyer": new_flyer.to_dict() }
     )
 
-@blueprint.route('/upload_image', methods=['POST'])
-def upload_image():
-    """Process the uploaded file and upload it to Google Cloud Storage."""
-    uploaded_file = request.files.get('photoURI')
+@blueprint.route("/search_flyers/<flyer_id>/replies", methods=["POST"])
+def get_replies(flyer_id):
+    data = request.get_json()
+    logger.info("Data recieved: %s", data)
 
-    if not uploaded_file:
-        return 'No file uploaded.', 400
+    if "sender" not in data:
+        msg = "No sender provided for reply."
+        logger.info(msg)
+        return create_response(status=422, message=msg)
+    
+    flyer = SearchFlyer.query.get(flyer_id)
+    sender = data['sender']
+    data['content'] = f'{sender} se quiere contactar con vos por tu aviso.'
+    data['flyer_id'] = flyer_id
+    data['recipient'] = flyer.created_by
+    data['status'] = 'sent'
 
-    # Create a Cloud Storage client.
-    gcs = storage.Client()
+    # create SQLAlchemy Object
+    message = Message(**data)
 
-    CLOUD_STORAGE_BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
-
-    # Get the bucket that the file will be uploaded to.
-    bucket = gcs.get_bucket(CLOUD_STORAGE_BUCKET)
-
-    # Create a new blob and upload the file's content.
-    blob = bucket.blob(uploaded_file.filename)
-
-    blob.upload_from_string(
-        uploaded_file.read(),
-        content_type=uploaded_file.content_type
-    )
-
-    # The public URL can be used to directly access the uploaded file via HTTP.
+    # commit it to database
+    db.session.add_all([message])
+    db.session.commit()
     return create_response(
-        message=f"Successfully uploaded image",
-        data={ "photo_url": blob.public_url }
+        message=f"Successfully created message with id: {message.id}",
+        data={ "message": message.to_dict() }
     )
+
+@blueprint.route("/search_flyers/<flyer_id>/replies", methods=["GET"])
+def post_reply(flyer_id):
+    messages = Message.query.all()
+    return create_response(data={"messages": serialize_list(messages)})
+

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { object } from 'prop-types';
 
 /* Material UI */
@@ -17,6 +17,8 @@ import Profile from '../profile';
 import TopBar from './components/TopBar';
 import { HomeWrapper } from './components/styled';
 import makePrivate from '../common/hoc/makePrivate';
+import Firebase from '../../firebase/firebase';
+
 
 const tabsIndex = ['map', 'lost', 'found', 'profile'];
 
@@ -30,6 +32,30 @@ const tabs = (props) => ({
 function Home({ match: { params }, history }) {
   const content = tabs()[params.tab];
   const selectedTabIndex = tabsIndex.indexOf(params.tab);
+
+  useEffect(() => {
+    // Notification.requestPermission().then((permission) => {
+    //   if (permission === 'granted') {
+    //     console.log('Notification permission granted.');
+    //     // TODO(developer): Retrieve an Instance ID token for use with FCM.
+    //     // ...
+    //   } else {
+    //     console.log('Unable to get permission to notify.');
+    //   }
+    // });
+
+    // Firebase.messaging.getToken().then((currentToken) => {
+    //   if (currentToken) {
+    //     console.log(currentToken);
+    //   } else {
+    //     // Show permission request.
+    //     console.log('No Instance ID token available. Request permission to generate one.');
+    //     // Show permission UI.
+    //   }
+    // }).catch((err) => {
+    //   console.log('An error occurred while retrieving token. ', err);
+    // });
+  }, []);
 
   return (
     <HomeWrapper>
