@@ -3,21 +3,44 @@ import {
   shape, number, func, array,
 } from 'prop-types';
 import GoogleMapReact from 'google-map-react';
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { geolocated } from 'react-geolocated';
 import compose from 'lodash/fp/compose';
 import RoomIcon from '@material-ui/icons/Room';
 import { makeStyles } from '@material-ui/core/styles';
 import Popover from '@material-ui/core/Popover';
-import Typography from '@material-ui/core/Typography';
+import Avatar from '@material-ui/core/Avatar';
 
 import { MapWrapper } from './components/styled';
 import UserActions from '../common/UserActions';
 import { withContext } from '../common/context';
+import { FLYER_TYPE } from '../flyer-item/constants';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   typography: {
-    padding: theme.spacing(2),
+  },
+  petPhoto: {
+    height: 100,
+    width: 100,
+  },
+  popover: {
+    padding: 0,
+  },
+  popoverName: {
+    width: '100%',
+    display: 'inline-block',
+    textAlign: 'center',
+    marginTop: 8,
+  },
+  centerCroppedWrapper: {
+    left: '50%',
+    marginBottom: -3,
+  },
+  centerCropped: {
+    width: 100,
+    height: 100,
+    textAlign: 'center',
+    overflow: 'hidden',
   },
 }));
 
@@ -32,8 +55,10 @@ const SimpleMap = ({
     longitude: -64.188881,
   };
   const classes = useStyles();
+  const history = useHistory();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [focusedFlyer, setFocusedFlyer] = React.useState(null);
+  const typeText = focusedFlyer && focusedFlyer.flyerType === FLYER_TYPE.lost ? 'lost' : 'found';
 
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
@@ -86,6 +111,9 @@ const SimpleMap = ({
           open={open}
           anchorEl={anchorEl}
           onClose={handleClose}
+          classes={{
+            paper: classes.popover,
+          }}
           anchorOrigin={{
             vertical: 'bottom',
             horizontal: 'center',
@@ -95,15 +123,17 @@ const SimpleMap = ({
             horizontal: 'center',
           }}
         >
-          {/* eslint-disable-next-line */}
-          <Typography className={classes.typography}>
-            🔍 Detalles:
-            {' '}
-            {focusedFlyer && focusedFlyer.description}
-            {' '}
-            <br />
-            <Link>Ver más</Link>
-          </Typography>
+          {/* <span className={classes.popoverName}>{focusedFlyer && focusedFlyer.petName}</span> */}
+          <div
+            onClick={() => history.push(`/flyer?type=${typeText}&id=${focusedFlyer && focusedFlyer.id}`)}
+            className={classes.centerCroppedWrapper}
+          >
+            <img
+              alt="pet"
+              className={classes.centerCropped}
+              src={focusedFlyer && focusedFlyer.photoUrl}
+            />
+          </div>
         </Popover>
       </MapWrapper>
 

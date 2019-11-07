@@ -25,6 +25,8 @@ export class AppProvider extends React.PureComponent {
       found: [],
       lost: [],
       snackbarMessage: '',
+      flyerDetail: null,
+      replies: [],
     }
 
     componentDidMount() {
@@ -65,6 +67,32 @@ export class AppProvider extends React.PureComponent {
       }
     }
 
+    getSearchFlyer = async id => {
+      const { data: { result: { flyer }, success } } = await apiClient.get(`/search_flyers/${id}`);
+      if (success) {
+        this.setState({
+          flyerDetail: mapKeys(flyer, (_, key) => camelCase(key)),
+        });
+      }
+    }
+
+    getRepliesForFlyer = async flyerId => {
+      const { data: { result: { messages }, success } } = await apiClient.get(`/search_flyers/${flyerId}/replies`);
+      if (success) {
+        this.setState({
+          replies: messages.map(e => mapKeys(e, (_, key) => camelCase(key))),
+        });
+      }
+    }
+
+    postReply = async (flyerId, values) => {
+      await apiClient.post(`/search_flyers/${flyerId}/replies`, {
+        ...mapKeys(values, (_, key) => snakeCase(key)),
+      });
+
+      this.showSuccessSnackbar('¡Se ha enviado una notificación al usuario!');
+    }
+
     fetchMapFlyers = async (bounds = {}) => {
       const { data: { result: { flyers }, success } } = await apiClient.get('/map_flyers', { params: { ...bounds } });
       if (success) {
@@ -84,6 +112,9 @@ export class AppProvider extends React.PureComponent {
         getSearchFlyers: this.getSearchFlyers,
         fetchMapFlyers: this.fetchMapFlyers,
         uploadImage: this.uploadImage,
+        getSearchFlyer: this.getSearchFlyer,
+        postReply: this.postReply,
+        getRepliesForFlyer: this.getRepliesForFlyer,
       };
 
       return (
