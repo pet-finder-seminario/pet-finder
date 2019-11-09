@@ -315,7 +315,7 @@ const FlyerItem = props => {
                     rows={5}
                   />
                   {
-                  !ownFlyer
+                  !ownFlyer && viewMode
                     && (
                     <Button onClick={onPostReply} className={classes.contactButton} variant="contained" color="secondary">
                       <NotificationsNoneIcon />

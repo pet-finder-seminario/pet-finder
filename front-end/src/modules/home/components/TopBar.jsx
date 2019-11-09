@@ -36,6 +36,7 @@ export default function MenuAppBar() {
   function onLogout() {
     localStorage.removeItem('ACCESS_TOKEN');
     Firebase.auth.signOut();
+    Firebase.messaging.deleteToken();
     handleClose();
   }
 
