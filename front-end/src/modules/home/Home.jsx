@@ -72,7 +72,6 @@ function Home({
     );
   }, []);
 
-
   return (
     <HomeWrapper>
       <TopBar />

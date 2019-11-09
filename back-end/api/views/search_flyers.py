@@ -102,7 +102,7 @@ def get_replies(flyer_id):
         'body': f'{sender} se quiere contactar con vos por tu aviso.',
         'flyer_id': flyer_id
     })
-
+    
     return create_response(
         message=f"Successfully created message with id: {message.id}",
         data={ "message": message.to_dict() }
