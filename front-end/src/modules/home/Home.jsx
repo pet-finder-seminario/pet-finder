@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
-import { object } from 'prop-types';
+import { object, func } from 'prop-types';
+import { useHistory } from 'react-router-dom';
+import compose from 'lodash/fp/compose';
 
 /* Material UI */
 import BottomNavigation from '@material-ui/core/BottomNavigation';
@@ -18,7 +20,9 @@ import TopBar from './components/TopBar';
 import { HomeWrapper } from './components/styled';
 import makePrivate from '../common/hoc/makePrivate';
 import Firebase from '../../firebase/firebase';
-
+import { withContext } from '../common/context';
+import { withAuthContext } from '../auth/authContext';
+import { useDialog } from '../common/DialogContext';
 
 const tabsIndex = ['map', 'lost', 'found', 'profile'];
 
@@ -29,32 +33,43 @@ const tabs = (props) => ({
   profile: <Profile />,
 });
 
-function Home({ match: { params }, history }) {
+function Home({
+  match: { params }, user, postUserData,
+}) {
   const content = tabs()[params.tab];
   const selectedTabIndex = tabsIndex.indexOf(params.tab);
+  const showDialog = useDialog();
+  const history = useHistory();
 
   useEffect(() => {
-    // Notification.requestPermission().then((permission) => {
-    //   if (permission === 'granted') {
-    //     console.log('Notification permission granted.');
-    //     // TODO(developer): Retrieve an Instance ID token for use with FCM.
-    //     // ...
-    //   } else {
-    //     console.log('Unable to get permission to notify.');
-    //   }
-    // });
+    Firebase.messaging
+      .requestPermission()
+      .then(async () => {
+        const firebaseToken = await Firebase.messaging.getToken();
 
-    // Firebase.messaging.getToken().then((currentToken) => {
-    //   if (currentToken) {
-    //     console.log(currentToken);
-    //   } else {
-    //     // Show permission request.
-    //     console.log('No Instance ID token available. Request permission to generate one.');
-    //     // Show permission UI.
-    //   }
-    // }).catch((err) => {
-    //   console.log('An error occurred while retrieving token. ', err);
-    // });
+        postUserData({
+          email: user.email,
+          pushToken: firebaseToken,
+        });
+      })
+      .catch((err) => {
+        console.log('Unable to get permission to notify.', err);
+      });
+
+    navigator.serviceWorker.addEventListener(
+      'message', ({ data }) => {
+        console.log(data);
+        const payload = data['firebase-messaging-msg-data'].data;
+        showDialog({
+          title: '¡Respondieron tu aviso!',
+          message: payload.body,
+          actionText: 'Ver respuestas',
+          onAction: () => {
+            history.push(`/messages?flyerId=${payload.flyer_id}`);
+          },
+        });
+      },
+    );
   }, []);
 
   return (
@@ -79,7 +94,12 @@ function Home({ match: { params }, history }) {
 
 Home.propTypes = {
   match: object,
-  history: object,
+  postUserData: func,
+  user: object,
 };
 
-export default makePrivate(Home);
+export default compose(
+  withAuthContext(({ user }) => ({ user })),
+  withContext(({ postUserData }) => ({ postUserData })),
+  makePrivate,
+)(Home);

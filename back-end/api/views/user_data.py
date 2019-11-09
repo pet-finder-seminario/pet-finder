@@ -20,21 +20,21 @@ def post_user_data():
         msg = "No email provided."
         logger.info(msg)
         return create_response(status=422, message=msg)
+
+    email = data['email']
     
-    user_data = UserData.query.filter(UserData.email == data['email'])
+    user_data = UserData.query.filter_by(email= email).first()
     
     if user_data:
-        if data['push_token']:
-            user_data.push_token = data['push_token']
-        if data['phone_number']:
-            user_data.phone_number = data['phone_number']
+        user_data.push_token = data['push_token']
     else:
         user_data = UserData(**data)
+        # commit it to database
+        db.session.add_all([user_data])
 
-    # commit it to database
-    db.session.add_all([user_data])
     db.session.commit()
+
     return create_response(
-        message=f"Successfully update user data with id: {user_data.id}",
+        message=f"Successfully update user data",
         data={ "message": user_data.to_dict() }
     )

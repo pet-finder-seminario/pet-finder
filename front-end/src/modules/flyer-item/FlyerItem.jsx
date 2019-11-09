@@ -111,6 +111,7 @@ const FlyerItem = props => {
 
   const viewMode = !!query.id;
   const ownFlyer = !!(flyerDetail && user && flyerDetail.createdBy === user.email);
+  const disableInputs = !ownFlyer && mode !== 'new';
 
   useEffect(() => {
     if (viewMode) {
@@ -279,7 +280,7 @@ const FlyerItem = props => {
                     margin="normal"
                     error={errors.petName}
                     className="text-field"
-                    disabled={!ownFlyer}
+                    disabled={disableInputs}
                     InputLabelProps={{
                       shrink: true,
                     }}
@@ -292,7 +293,7 @@ const FlyerItem = props => {
                     margin="normal"
                     error={errors.breed}
                     className="text-field"
-                    disabled={!ownFlyer}
+                    disabled={disableInputs}
                     InputLabelProps={{
                       shrink: true,
                     }}
@@ -306,7 +307,7 @@ const FlyerItem = props => {
                     error={errors.description}
                     className="text-field"
                     variant="outlined"
-                    disabled={!ownFlyer}
+                    disabled={disableInputs}
                     InputLabelProps={{
                       shrink: true,
                     }}
