@@ -43,6 +43,12 @@ export class AppProvider extends React.PureComponent {
       this.showSuccessSnackbar('¡Actualizado con éxito!');
     }
 
+    postUserData = async (values) => {
+      await apiClient.post('/user_data', {
+        ...mapKeys(values, (_, key) => snakeCase(key)),
+      });
+    }
+
     uploadImage = async data => {
       const { data: { result } } = await apiClient.post('/upload_image', data, {
         headers: {
@@ -115,6 +121,7 @@ export class AppProvider extends React.PureComponent {
         getSearchFlyer: this.getSearchFlyer,
         postReply: this.postReply,
         getRepliesForFlyer: this.getRepliesForFlyer,
+        postUserData: this.postUserData,
       };
 
       return (

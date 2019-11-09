@@ -8,6 +8,11 @@ from sqlalchemy_utils import create_database, database_exists
 
 from api.config import config
 from api.core import all_exception_handler
+import firebase_admin
+from firebase_admin import credentials
+
+cred = credentials.Certificate(os.environ.get('FIREBASE_APPLICATION_CREDENTIALS'))
+firebase_admin.initialize_app(cred)
 
 
 class RequestFormatter(logging.Formatter):

@@ -1,13 +1,42 @@
 from flask import Blueprint, request
-from api.models import db, SearchFlyer, AdoptionFlyer, Message
+from api.models import db, SearchFlyer, AdoptionFlyer, Message, UserData
 from api.core import create_response, serialize_list, logger
 from sqlalchemy import inspect
+from firebase_admin import messaging
+import os
 
 blueprint = Blueprint("search_flyers", __name__)
 
 '''
 Docs: https://flask-sqlalchemy.palletsprojects.com/en/2.x/queries/#queries-in-views
 '''
+
+# Submit a notification to `email` with JSON `content`
+def submit_notification(email, content):
+    user_data = UserData.query.filter_by(email = email).first()
+    notif = messaging.Notification(content['title'], content['body'], image = 'https://images-na.ssl-images-amazon.com/images/I/41NMl%2Bp3MlL._SY355_.jpg')
+    app_url = os.environ.get('APP_URL')
+    flyer_id = content['flyer_id']
+
+    link = f'{app_url}/messages?flyerId={flyer_id}'
+
+    fcm_options = messaging.WebpushFCMOptions(link = link)
+
+    web_push = messaging.WebpushConfig(fcm_options = fcm_options)
+
+    # See documentation on defining a message payload.
+    message = messaging.Message(
+        data=content,
+        token=user_data.push_token,
+        notification=notif,
+        webpush=web_push
+    )
+
+    # Send a message to the device corresponding to the provided
+    # registration token.
+    response = messaging.send(message)
+    # Response is a message ID string.
+    print('Successfully sent message:', response)
 
 @blueprint.route("/search_flyers", methods=["GET"])
 def get_flyers():
@@ -67,6 +96,13 @@ def get_replies(flyer_id):
     # commit it to database
     db.session.add_all([message])
     db.session.commit()
+
+    submit_notification(flyer.created_by, {
+        'title': '¡Respondieron tu aviso!',
+        'body': f'{sender} se quiere contactar con vos por tu aviso.',
+        'flyer_id': flyer_id
+    })
+
     return create_response(
         message=f"Successfully created message with id: {message.id}",
         data={ "message": message.to_dict() }

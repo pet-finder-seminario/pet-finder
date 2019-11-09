@@ -4,8 +4,9 @@
 from .SearchFlyer import SearchFlyer
 from .AdoptionFlyer import AdoptionFlyer
 from .Message import Message
+from .UserData import UserData
 from .base import db
 
-__all__ = ["AdoptionFlyer", "SearchFlyer", "Message", "db"]
+__all__ = ["AdoptionFlyer", "SearchFlyer", "Message", "UserData", "db"]
 
 # You must import all of the new Models you create to this page
