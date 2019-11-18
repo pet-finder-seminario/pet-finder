@@ -5,7 +5,9 @@ firebase.initializeApp({
   messagingSenderId: '308205182093',
 });
 
-const messaging = firebase.messaging();
+if (firebase.messaging.isSupported()){
+  const messaging = firebase.messaging();
+}
 
 messaging.setBackgroundMessageHandler((payload) => {
   const promiseChain = clients
