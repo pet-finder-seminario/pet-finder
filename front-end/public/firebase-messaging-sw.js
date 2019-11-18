@@ -5,6 +5,7 @@ firebase.initializeApp({
   messagingSenderId: '308205182093',
 });
 
+let messaging;
 if (firebase.messaging.isSupported()){
   const messaging = firebase.messaging();
 }
