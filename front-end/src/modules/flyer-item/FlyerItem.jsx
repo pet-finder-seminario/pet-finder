@@ -255,7 +255,7 @@ const FlyerItem = props => {
           <>
             <TopBar
               actionDisabled={!isValid}
-              onActionClick={() => formRef.current.dispatchEvent(new Event('submit'))}
+              onActionClick={() => formRef.current.dispatchEvent(new Event('submit', { cancelable: true }))}
               flyerDetail={flyerDetail}
               user={user}
               {...props}
@@ -266,7 +266,16 @@ const FlyerItem = props => {
               </div>
             ) : (
               <FlyerItemWrapper>
-                <form ref={formRef} className="form" onSubmit={handleSubmit}>
+                <form
+                  ref={formRef}
+                  className="form"
+                  onSubmit={e => {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    handleSubmit();
+                  }}
+                >
                   <h2 className="title">{title}</h2>
                   <h4 className="subtitle">{subtitle}</h4>
                   {picture}
