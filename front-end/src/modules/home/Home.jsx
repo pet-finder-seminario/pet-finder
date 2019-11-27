@@ -42,34 +42,36 @@ function Home({
   const history = useHistory();
 
   useEffect(() => {
-    Firebase.messaging
-      .requestPermission()
-      .then(async () => {
-        const firebaseToken = await Firebase.messaging.getToken();
+    if (Firebase.messaging) {
+      Firebase.messaging
+        .requestPermission()
+        .then(async () => {
+          const firebaseToken = await Firebase.messaging.getToken();
 
-        postUserData({
-          email: user.email,
-          pushToken: firebaseToken,
+          postUserData({
+            email: user.email,
+            pushToken: firebaseToken,
+          });
+        })
+        .catch((err) => {
+          console.log('Unable to get permission to notify.', err);
         });
-      })
-      .catch((err) => {
-        console.log('Unable to get permission to notify.', err);
-      });
 
-    navigator.serviceWorker.addEventListener(
-      'message', ({ data }) => {
-        console.log(data);
-        const payload = data['firebase-messaging-msg-data'].data;
-        showDialog({
-          title: '¡Respondieron tu aviso!',
-          message: payload.body,
-          actionText: 'Ver respuestas',
-          onAction: () => {
-            history.push(`/messages?flyerId=${payload.flyer_id}`);
-          },
-        });
-      },
-    );
+      navigator.serviceWorker.addEventListener(
+        'message', ({ data }) => {
+          console.log(data);
+          const payload = data['firebase-messaging-msg-data'].data;
+          showDialog({
+            title: '¡Respondieron tu aviso!',
+            message: payload.body,
+            actionText: 'Ver respuestas',
+            onAction: () => {
+              history.push(`/messages?flyerId=${payload.flyer_id}`);
+            },
+          });
+        },
+      );
+    }
   }, []);
 
   return (
